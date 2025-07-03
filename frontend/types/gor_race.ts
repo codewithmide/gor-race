@@ -1,0 +1,1331 @@
+export type GorRace = {
+  "version": "0.1.0",
+  "name": "gor_race",
+  "instructions": [
+    {
+      "name": "initialize",
+      "docs": [
+        "Initialize the platform vault and set platform parameters"
+      ],
+      "accounts": [
+        {
+          "name": "platformVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "platformFeeBps",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "createProfile",
+      "docs": [
+        "Create a player profile with username"
+      ],
+      "accounts": [
+        {
+          "name": "playerProfile",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "player",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "clock",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "username",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "createRace",
+      "docs": [
+        "Create a new race that players can join"
+      ],
+      "accounts": [
+        {
+          "name": "race",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "creator",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "clock",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "raceId",
+          "type": "u64"
+        },
+        {
+          "name": "waitTime",
+          "type": {
+            "option": "i64"
+          }
+        }
+      ]
+    },
+    {
+      "name": "joinRace",
+      "docs": [
+        "Join a race by selecting a horse and paying entry fee"
+      ],
+      "accounts": [
+        {
+          "name": "race",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "playerEntry",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "player",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "raceVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "horseNumber",
+          "type": "u8"
+        },
+        {
+          "name": "referralCode",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "executeRace",
+      "docs": [
+        "Execute the race after timeout or when conditions are met"
+      ],
+      "accounts": [
+        {
+          "name": "race",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "raceVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "platformVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "recentBlockhashes",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "clock",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "claimPrize",
+      "docs": [
+        "Claim prize after race completion"
+      ],
+      "accounts": [
+        {
+          "name": "race",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "playerEntry",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "player",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "raceVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "platformVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "updateStats",
+      "docs": [
+        "Update player statistics after race completion"
+      ],
+      "accounts": [
+        {
+          "name": "playerProfile",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "race",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "playerEntry",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "player",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "clock",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "updatePlatformFee",
+      "docs": [
+        "Update platform fee (authority only)"
+      ],
+      "accounts": [
+        {
+          "name": "platformVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "newFeeBps",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "withdrawPlatformFees",
+      "docs": [
+        "Withdraw platform fees (authority only)"
+      ],
+      "accounts": [
+        {
+          "name": "platformVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "platformVault",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "publicKey"
+          },
+          {
+            "name": "platformFeeBps",
+            "type": "u16"
+          },
+          {
+            "name": "totalFeesCollected",
+            "type": "u64"
+          },
+          {
+            "name": "feesTransferred",
+            "type": "bool"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "playerEntry",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "player",
+            "type": "publicKey"
+          },
+          {
+            "name": "race",
+            "type": "publicKey"
+          },
+          {
+            "name": "horseNumber",
+            "type": "u8"
+          },
+          {
+            "name": "entryAmount",
+            "type": "u64"
+          },
+          {
+            "name": "claimStatus",
+            "type": {
+              "defined": "ClaimStatus"
+            }
+          },
+          {
+            "name": "prizeAmount",
+            "type": "u64"
+          },
+          {
+            "name": "statsUpdated",
+            "type": "bool"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "playerProfile",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "player",
+            "docs": [
+              "The player's wallet address"
+            ],
+            "type": "publicKey"
+          },
+          {
+            "name": "username",
+            "docs": [
+              "The player's chosen username (max 32 characters)"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "totalRaces",
+            "docs": [
+              "Total number of races participated in"
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "totalWins",
+            "docs": [
+              "Total number of wins (1st place)"
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "totalPodiums",
+            "docs": [
+              "Total number of podium finishes (1st, 2nd, 3rd place)"
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "totalEarnings",
+            "docs": [
+              "Total GOR earned from prizes"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "createdAt",
+            "docs": [
+              "Account creation timestamp"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "updatedAt",
+            "docs": [
+              "Last updated timestamp"
+            ],
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "race",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "raceId",
+            "type": "u64"
+          },
+          {
+            "name": "creator",
+            "type": "publicKey"
+          },
+          {
+            "name": "status",
+            "type": {
+              "defined": "RaceStatus"
+            }
+          },
+          {
+            "name": "horseNames",
+            "type": {
+              "array": [
+                "string",
+                10
+              ]
+            }
+          },
+          {
+            "name": "totalPool",
+            "type": "u64"
+          },
+          {
+            "name": "platformFee",
+            "type": "u64"
+          },
+          {
+            "name": "entryCount",
+            "type": "u32"
+          },
+          {
+            "name": "maxPlayers",
+            "type": "u32"
+          },
+          {
+            "name": "waitTime",
+            "type": "i64"
+          },
+          {
+            "name": "referralCode",
+            "type": "string"
+          },
+          {
+            "name": "startTime",
+            "type": "i64"
+          },
+          {
+            "name": "raceStartTime",
+            "type": {
+              "option": "i64"
+            }
+          },
+          {
+            "name": "endTime",
+            "type": {
+              "option": "i64"
+            }
+          },
+          {
+            "name": "winningHorses",
+            "type": {
+              "array": [
+                "u8",
+                3
+              ]
+            }
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "ClaimStatus",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Unclaimed"
+          },
+          {
+            "name": "Claimed"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RaceStatus",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Pending"
+          },
+          {
+            "name": "Racing"
+          },
+          {
+            "name": "Completed"
+          },
+          {
+            "name": "Cancelled"
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InvalidHorseNumber",
+      "msg": "Invalid horse number selected"
+    },
+    {
+      "code": 6001,
+      "name": "RaceNotPending",
+      "msg": "Race already started or completed"
+    },
+    {
+      "code": 6002,
+      "name": "RaceNotReady",
+      "msg": "Race not ready for execution"
+    },
+    {
+      "code": 6003,
+      "name": "AlreadyJoined",
+      "msg": "Player already joined this race"
+    },
+    {
+      "code": 6004,
+      "name": "AlreadyClaimed",
+      "msg": "Prize already claimed"
+    },
+    {
+      "code": 6005,
+      "name": "NoPrize",
+      "msg": "No prize to claim"
+    },
+    {
+      "code": 6006,
+      "name": "InvalidPlatformFee",
+      "msg": "Invalid platform fee"
+    },
+    {
+      "code": 6007,
+      "name": "InsufficientFunds",
+      "msg": "Insufficient funds"
+    },
+    {
+      "code": 6008,
+      "name": "RaceFull",
+      "msg": "Race is full"
+    },
+    {
+      "code": 6009,
+      "name": "Unauthorized",
+      "msg": "Unauthorized"
+    },
+    {
+      "code": 6010,
+      "name": "MathOverflow",
+      "msg": "Math overflow"
+    },
+    {
+      "code": 6011,
+      "name": "RaceNotCompleted",
+      "msg": "Race not completed"
+    },
+    {
+      "code": 6012,
+      "name": "InvalidWaitTime",
+      "msg": "Invalid wait time"
+    },
+    {
+      "code": 6013,
+      "name": "InvalidReferralCode",
+      "msg": "Invalid referral code"
+    },
+    {
+      "code": 6014,
+      "name": "UsernameTooLong",
+      "msg": "Username too long (max 32 characters)"
+    },
+    {
+      "code": 6015,
+      "name": "UsernameEmpty",
+      "msg": "Username cannot be empty"
+    },
+    {
+      "code": 6016,
+      "name": "UsernameAlreadyTaken",
+      "msg": "Username already taken"
+    },
+    {
+      "code": 6017,
+      "name": "ProfileNotFound",
+      "msg": "Player profile not found"
+    }
+  ]
+};
+
+export const IDL: GorRace = {
+  "version": "0.1.0",
+  "name": "gor_race",
+  "instructions": [
+    {
+      "name": "initialize",
+      "docs": [
+        "Initialize the platform vault and set platform parameters"
+      ],
+      "accounts": [
+        {
+          "name": "platformVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "platformFeeBps",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "createProfile",
+      "docs": [
+        "Create a player profile with username"
+      ],
+      "accounts": [
+        {
+          "name": "playerProfile",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "player",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "clock",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "username",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "createRace",
+      "docs": [
+        "Create a new race that players can join"
+      ],
+      "accounts": [
+        {
+          "name": "race",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "creator",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "clock",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "raceId",
+          "type": "u64"
+        },
+        {
+          "name": "waitTime",
+          "type": {
+            "option": "i64"
+          }
+        }
+      ]
+    },
+    {
+      "name": "joinRace",
+      "docs": [
+        "Join a race by selecting a horse and paying entry fee"
+      ],
+      "accounts": [
+        {
+          "name": "race",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "playerEntry",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "player",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "raceVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "horseNumber",
+          "type": "u8"
+        },
+        {
+          "name": "referralCode",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "executeRace",
+      "docs": [
+        "Execute the race after timeout or when conditions are met"
+      ],
+      "accounts": [
+        {
+          "name": "race",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "raceVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "platformVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "recentBlockhashes",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "clock",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "claimPrize",
+      "docs": [
+        "Claim prize after race completion"
+      ],
+      "accounts": [
+        {
+          "name": "race",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "playerEntry",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "player",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "raceVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "platformVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "updateStats",
+      "docs": [
+        "Update player statistics after race completion"
+      ],
+      "accounts": [
+        {
+          "name": "playerProfile",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "race",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "playerEntry",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "player",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "clock",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "updatePlatformFee",
+      "docs": [
+        "Update platform fee (authority only)"
+      ],
+      "accounts": [
+        {
+          "name": "platformVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "newFeeBps",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "withdrawPlatformFees",
+      "docs": [
+        "Withdraw platform fees (authority only)"
+      ],
+      "accounts": [
+        {
+          "name": "platformVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "platformVault",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "publicKey"
+          },
+          {
+            "name": "platformFeeBps",
+            "type": "u16"
+          },
+          {
+            "name": "totalFeesCollected",
+            "type": "u64"
+          },
+          {
+            "name": "feesTransferred",
+            "type": "bool"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "playerEntry",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "player",
+            "type": "publicKey"
+          },
+          {
+            "name": "race",
+            "type": "publicKey"
+          },
+          {
+            "name": "horseNumber",
+            "type": "u8"
+          },
+          {
+            "name": "entryAmount",
+            "type": "u64"
+          },
+          {
+            "name": "claimStatus",
+            "type": {
+              "defined": "ClaimStatus"
+            }
+          },
+          {
+            "name": "prizeAmount",
+            "type": "u64"
+          },
+          {
+            "name": "statsUpdated",
+            "type": "bool"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "playerProfile",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "player",
+            "docs": [
+              "The player's wallet address"
+            ],
+            "type": "publicKey"
+          },
+          {
+            "name": "username",
+            "docs": [
+              "The player's chosen username (max 32 characters)"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "totalRaces",
+            "docs": [
+              "Total number of races participated in"
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "totalWins",
+            "docs": [
+              "Total number of wins (1st place)"
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "totalPodiums",
+            "docs": [
+              "Total number of podium finishes (1st, 2nd, 3rd place)"
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "totalEarnings",
+            "docs": [
+              "Total GOR earned from prizes"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "createdAt",
+            "docs": [
+              "Account creation timestamp"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "updatedAt",
+            "docs": [
+              "Last updated timestamp"
+            ],
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "race",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "raceId",
+            "type": "u64"
+          },
+          {
+            "name": "creator",
+            "type": "publicKey"
+          },
+          {
+            "name": "status",
+            "type": {
+              "defined": "RaceStatus"
+            }
+          },
+          {
+            "name": "horseNames",
+            "type": {
+              "array": [
+                "string",
+                10
+              ]
+            }
+          },
+          {
+            "name": "totalPool",
+            "type": "u64"
+          },
+          {
+            "name": "platformFee",
+            "type": "u64"
+          },
+          {
+            "name": "entryCount",
+            "type": "u32"
+          },
+          {
+            "name": "maxPlayers",
+            "type": "u32"
+          },
+          {
+            "name": "waitTime",
+            "type": "i64"
+          },
+          {
+            "name": "referralCode",
+            "type": "string"
+          },
+          {
+            "name": "startTime",
+            "type": "i64"
+          },
+          {
+            "name": "raceStartTime",
+            "type": {
+              "option": "i64"
+            }
+          },
+          {
+            "name": "endTime",
+            "type": {
+              "option": "i64"
+            }
+          },
+          {
+            "name": "winningHorses",
+            "type": {
+              "array": [
+                "u8",
+                3
+              ]
+            }
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "ClaimStatus",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Unclaimed"
+          },
+          {
+            "name": "Claimed"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RaceStatus",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Pending"
+          },
+          {
+            "name": "Racing"
+          },
+          {
+            "name": "Completed"
+          },
+          {
+            "name": "Cancelled"
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InvalidHorseNumber",
+      "msg": "Invalid horse number selected"
+    },
+    {
+      "code": 6001,
+      "name": "RaceNotPending",
+      "msg": "Race already started or completed"
+    },
+    {
+      "code": 6002,
+      "name": "RaceNotReady",
+      "msg": "Race not ready for execution"
+    },
+    {
+      "code": 6003,
+      "name": "AlreadyJoined",
+      "msg": "Player already joined this race"
+    },
+    {
+      "code": 6004,
+      "name": "AlreadyClaimed",
+      "msg": "Prize already claimed"
+    },
+    {
+      "code": 6005,
+      "name": "NoPrize",
+      "msg": "No prize to claim"
+    },
+    {
+      "code": 6006,
+      "name": "InvalidPlatformFee",
+      "msg": "Invalid platform fee"
+    },
+    {
+      "code": 6007,
+      "name": "InsufficientFunds",
+      "msg": "Insufficient funds"
+    },
+    {
+      "code": 6008,
+      "name": "RaceFull",
+      "msg": "Race is full"
+    },
+    {
+      "code": 6009,
+      "name": "Unauthorized",
+      "msg": "Unauthorized"
+    },
+    {
+      "code": 6010,
+      "name": "MathOverflow",
+      "msg": "Math overflow"
+    },
+    {
+      "code": 6011,
+      "name": "RaceNotCompleted",
+      "msg": "Race not completed"
+    },
+    {
+      "code": 6012,
+      "name": "InvalidWaitTime",
+      "msg": "Invalid wait time"
+    },
+    {
+      "code": 6013,
+      "name": "InvalidReferralCode",
+      "msg": "Invalid referral code"
+    },
+    {
+      "code": 6014,
+      "name": "UsernameTooLong",
+      "msg": "Username too long (max 32 characters)"
+    },
+    {
+      "code": 6015,
+      "name": "UsernameEmpty",
+      "msg": "Username cannot be empty"
+    },
+    {
+      "code": 6016,
+      "name": "UsernameAlreadyTaken",
+      "msg": "Username already taken"
+    },
+    {
+      "code": 6017,
+      "name": "ProfileNotFound",
+      "msg": "Player profile not found"
+    }
+  ]
+};
