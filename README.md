@@ -45,12 +45,12 @@ GOR Race is a blockchain-based horse racing simulation where:
 ### Installation
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/codewithmide/gor-race
 cd gor-race
 npm install
 ```
 
-### Environment Setup
+### Environment Setup .env
 
 ```bash
 # Set your Solana cluster
@@ -401,58 +401,6 @@ Players with 10+ races get additional multipliers based on win rate:
 
 This rewards both high performance and consistent participation.
 
-## 🚀 Setup
-
-### Prerequisites
-
-- Rust 1.75.0+
-- Solana CLI 1.17.0+
-- Anchor CLI 0.29.0
-- Node.js 18+
-- Yarn or npm
-- Existing Solana keypair with GOR tokens
-
-### Installation
-
-1. **Clone the repository**
-
-```bash
-git clone https://github.com/yourusername/gor-race.git
-cd gor-race
-```
-
-2. **Install dependencies**
-
-```bash
-yarn install
-```
-
-3. **Build the program**
-
-```bash
-anchor build
-```
-
-4. **Configure Solana CLI for Gorbagana testnet**
-
-```bash
-solana config set --url https://rpc.gorbagana.wtf
-```
-
-5. **Use your existing keypair**
-
-```bash
-# Set your existing keypair as the default
-solana config set --keypair ~/.config/solana/id.json
-```
-
-6. **Check GOR balance**
-
-```bash
-# GOR is the native token, check balance with:
-solana balance
-```
-
 ## 📦 Deployment
 
 ### 1. Update Anchor.toml
@@ -630,9 +578,6 @@ The program randomly selects 10 horses from this pool for each race:
    - Verify PDA derivation
    - Ensure proper token accounts exist
 
-## 📝 License
-
-MIT License
 
 ## 🤝 Contributing
 
@@ -641,11 +586,3 @@ MIT License
 3. Commit changes (`git commit -m 'Add amazing feature'`)
 4. Push to branch (`git push origin feature/amazing-feature`)
 5. Open Pull Request
-
-## 📞 Support
-
-For issues and questions:
-
-- Open GitHub issue
-- Join Gorbagana Discord
-- Contact <team@gorbagana.wtf>
