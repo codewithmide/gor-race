@@ -32,7 +32,7 @@ export default function RootLayout({
           property="og:description"
           content="The wildest horse racing game in the digital frontier. Saddle up and race for glory!"
         />
-        <meta property="og:image" content="/og-image.png" />
+        <meta property="og:image" content="https://raw.githubusercontent.com/codewithmide/gor-race/refs/heads/main/frontend/public/og-image.png" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta
           name="twitter:title"
@@ -42,7 +42,7 @@ export default function RootLayout({
           name="twitter:description"
           content="The wildest horse racing game in the digital frontier. Saddle up and race for glory!"
         />
-        <meta name="twitter:image" content="/og-image.png" />
+        <meta name="twitter:image" content="https://raw.githubusercontent.com/codewithmide/gor-race/refs/heads/main/frontend/public/og-image.png" />
       </head>
       <body className="min-h-screen bg-gradient-to-br from-cowboy-sand via-cowboy-tan to-cowboy-brown">
         <CustomWalletProvider>
