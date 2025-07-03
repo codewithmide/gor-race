@@ -9,7 +9,7 @@ pub struct JoinRace<'info> {
     #[account(
         mut,
         constraint = race.status == RaceStatus::Pending @ GorRaceError::RaceNotPending,
-        constraint = race.entry_count < MAX_ENTRIES as u32 @ GorRaceError::RaceFull
+        constraint = race.entry_count < race.max_players @ GorRaceError::RaceFull
     )]
     pub race: Account<'info, Race>,
     
@@ -36,13 +36,18 @@ pub struct JoinRace<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn handler(ctx: Context<JoinRace>, horse_number: u8) -> Result<()> {
+pub fn handler(ctx: Context<JoinRace>, horse_number: u8, referral_code: String) -> Result<()> {
     require!(
         horse_number > 0 && horse_number <= MAX_HORSES as u8,
         GorRaceError::InvalidHorseNumber
     );
-
+    
+    // Validate referral code matches the race
     let race = &mut ctx.accounts.race;
+    require!(
+        race.referral_code == referral_code,
+        GorRaceError::InvalidReferralCode
+    );
     let player_entry = &mut ctx.accounts.player_entry;
     
     // Transfer entry fee to race vault
@@ -70,6 +75,7 @@ pub fn handler(ctx: Context<JoinRace>, horse_number: u8) -> Result<()> {
     player_entry.entry_amount = ENTRY_FEE;
     player_entry.claim_status = ClaimStatus::Unclaimed;
     player_entry.prize_amount = 0;
+    player_entry.stats_updated = false;
     player_entry.bump = ctx.bumps.player_entry;
 
     Ok(())

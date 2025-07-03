@@ -37,4 +37,22 @@ pub enum GorRaceError {
     
     #[msg("Race not completed")]
     RaceNotCompleted,
+    
+    #[msg("Invalid wait time")]
+    InvalidWaitTime,
+    
+    #[msg("Invalid referral code")]
+    InvalidReferralCode,
+    
+    #[msg("Username too long (max 32 characters)")]
+    UsernameTooLong,
+    
+    #[msg("Username cannot be empty")]
+    UsernameEmpty,
+    
+    #[msg("Username already taken")]
+    UsernameAlreadyTaken,
+    
+    #[msg("Player profile not found")]
+    ProfileNotFound,
 }

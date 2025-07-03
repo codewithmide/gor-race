@@ -10,7 +10,8 @@ use crate::utils::*;
 pub struct ExecuteRace<'info> {
     #[account(
         mut,
-        constraint = race.can_execute(clock.unix_timestamp) @ GorRaceError::RaceNotReady
+        constraint = (race.status == RaceStatus::Pending && race.can_start_race(clock.unix_timestamp)) || 
+                    (race.status == RaceStatus::Racing && race.is_race_finished(clock.unix_timestamp)) @ GorRaceError::RaceNotReady
     )]
     pub race: Account<'info, Race>,
     
@@ -42,62 +43,89 @@ pub fn handler(ctx: Context<ExecuteRace>) -> Result<()> {
     let race = &mut ctx.accounts.race;
     let clock = &ctx.accounts.clock;
     
-    // Calculate platform fee first (only need immutable access)
-    let platform_fee = {
-        let platform_vault = &ctx.accounts.platform_vault;
-        race.total_pool
-            .checked_mul(platform_vault.platform_fee_bps as u64)
-            .ok_or(GorRaceError::MathOverflow)?
-            .checked_div(10000)
-            .ok_or(GorRaceError::MathOverflow)?
-    };
-    
-    // Prepare seeds for signing
-    let race_key = race.key();
-    let seeds = &[
-        RACE_VAULT_SEED,
-        race_key.as_ref(),
-        &[ctx.bumps.race_vault]
-    ];
-    
-    // Transfer platform fee if not already done
-    if platform_fee > 0 && !ctx.accounts.platform_vault.fees_transferred {
-        // Get platform vault account info without mutable reference
-        let platform_vault_account = ctx.accounts.platform_vault.to_account_info();
+    match race.status {
+        RaceStatus::Pending => {
+            // Check if we can start the race
+            require!(race.can_start_race(clock.unix_timestamp), GorRaceError::RaceNotReady);
+            
+            // Check minimum players
+            if race.entry_count < MIN_PLAYERS_TO_START {
+                // Cancel race - not enough players
+                race.status = RaceStatus::Cancelled;
+                return Ok(());
+            }
+            
+            // Start the race simulation
+            race.status = RaceStatus::Racing;
+            race.race_start_time = Some(clock.unix_timestamp);
+            
+            msg!("Race started! {} players racing for {} seconds", race.entry_count, RACE_DURATION);
+        },
         
-        transfer(
-            CpiContext::new_with_signer(
-                ctx.accounts.system_program.to_account_info(),
-                Transfer {
-                    from: ctx.accounts.race_vault.to_account_info(),
-                    to: platform_vault_account,
-                },
-                &[seeds]
-            ),
-            platform_fee,
-        )?;
+        RaceStatus::Racing => {
+            // Check if race simulation is finished
+            require!(race.is_race_finished(clock.unix_timestamp), GorRaceError::RaceNotReady);
+            
+            // Calculate platform fee
+            let platform_fee = {
+                let platform_vault = &ctx.accounts.platform_vault;
+                race.total_pool
+                    .checked_mul(platform_vault.platform_fee_bps as u64)
+                    .ok_or(GorRaceError::MathOverflow)?
+                    .checked_div(10000)
+                    .ok_or(GorRaceError::MathOverflow)?
+            };
+            
+            // Prepare seeds for signing
+            let race_key = race.key();
+            let seeds = &[
+                RACE_VAULT_SEED,
+                race_key.as_ref(),
+                &[ctx.bumps.race_vault]
+            ];
+            
+            // Transfer platform fee
+            if platform_fee > 0 {
+                let platform_vault_account = ctx.accounts.platform_vault.to_account_info();
+                
+                transfer(
+                    CpiContext::new_with_signer(
+                        ctx.accounts.system_program.to_account_info(),
+                        Transfer {
+                            from: ctx.accounts.race_vault.to_account_info(),
+                            to: platform_vault_account,
+                        },
+                        &[seeds]
+                    ),
+                    platform_fee,
+                )?;
+                
+                let platform_vault = &mut ctx.accounts.platform_vault;
+                platform_vault.total_fees_collected = platform_vault.total_fees_collected
+                    .checked_add(platform_fee)
+                    .ok_or(GorRaceError::MathOverflow)?;
+            }
+            
+            // Generate race results
+            let winning_horses = generate_race_results(
+                &ctx.accounts.recent_blockhashes,
+                clock.slot,
+                race.race_id,
+            );
+            
+            race.platform_fee = platform_fee;
+            race.winning_horses = winning_horses;
+            race.status = RaceStatus::Completed;
+            race.end_time = Some(clock.unix_timestamp);
+            
+            msg!("Race completed! Winners: 1st: {}, 2nd: {}, 3rd: {}", 
+                 winning_horses[0], winning_horses[1], winning_horses[2]);
+        },
         
-        // Now get mutable reference to update state
-        let platform_vault = &mut ctx.accounts.platform_vault;
-        platform_vault.total_fees_collected = platform_vault.total_fees_collected
-            .checked_add(platform_fee)
-            .ok_or(GorRaceError::MathOverflow)?;
-        platform_vault.fees_transferred = true;
+        _ => {
+            return Err(GorRaceError::RaceNotReady.into());
+        }
     }
-    
-    // Update race state
-    race.platform_fee = platform_fee;
-    
-    // Generate race results
-    let winning_horses = generate_race_results(
-        &ctx.accounts.recent_blockhashes,
-        clock.slot,
-        race.race_id,
-    );
-    
-    race.winning_horses = winning_horses;
-    race.status = RaceStatus::Completed;
-    race.end_time = Some(clock.unix_timestamp);
 
     Ok(())
 }

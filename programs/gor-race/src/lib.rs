@@ -8,8 +8,7 @@ pub mod utils;
 
 use instructions::*;
 
-declare_id!("4aAooA2UyfiT27nVGKNkeKr8PgQGguppWnRFZZFiAsjs");
-
+declare_id!("2Xov1MEbY8DdK3MDci83RDJmAK1SHJxg4HtoiCLcBUen");
 #[program]
 pub mod gor_race {
     use super::*;
@@ -19,14 +18,19 @@ pub mod gor_race {
         instructions::initialize::handler(ctx, platform_fee_bps)
     }
 
+    /// Create a player profile with username
+    pub fn create_profile(ctx: Context<CreateProfile>, username: String) -> Result<()> {
+        instructions::create_profile::handler(ctx, username)
+    }
+
     /// Create a new race that players can join
-    pub fn create_race(ctx: Context<CreateRace>) -> Result<()> {
-        instructions::create_race::handler(ctx)
+    pub fn create_race(ctx: Context<CreateRace>, race_id: u64, wait_time: Option<i64>) -> Result<()> {
+        instructions::create_race::handler(ctx, race_id, wait_time)
     }
 
     /// Join a race by selecting a horse and paying entry fee
-    pub fn join_race(ctx: Context<JoinRace>, horse_number: u8) -> Result<()> {
-        instructions::join_race::handler(ctx, horse_number)
+    pub fn join_race(ctx: Context<JoinRace>, horse_number: u8, referral_code: String) -> Result<()> {
+        instructions::join_race::handler(ctx, horse_number, referral_code)
     }
 
     /// Execute the race after timeout or when conditions are met
@@ -37,6 +41,11 @@ pub mod gor_race {
     /// Claim prize after race completion
     pub fn claim_prize(ctx: Context<ClaimPrize>) -> Result<()> {
         instructions::claim_prize::handler(ctx)
+    }
+
+    /// Update player statistics after race completion
+    pub fn update_stats(ctx: Context<UpdateStats>) -> Result<()> {
+        instructions::update_stats::handler(ctx)
     }
 
     /// Update platform fee (authority only)

@@ -1,0 +1,23 @@
+{
+  "raceId": "1751509221",
+  "racePda": "6hwsbYpAX8ejC1VWjHTNoKSYMLgNn22N2W3YSsA19x6t",
+  "raceVaultPda": "2zM43qkTCRUGUhVJngQ1mTuDmVyx8bQngkDAEmwKmauc",
+  "creator": "GsWeXfqrmGLkN3fFUu5bdoDPDWJLf5LzAWjNfvctLuA6",
+  "maxPlayers": 100,
+  "waitTime": 90,
+  "referralCode": "X5XSYS00",
+  "startTime": 1751509223,
+  "horseNames": [
+    "Cyclos",
+    "Jupiter",
+    "Saber",
+    "Orca",
+    "Samo",
+    "Mercurial",
+    "Hubble",
+    "Aldrin",
+    "Cypher",
+    "Drift"
+  ],
+  "timestamp": "2025-07-03T02:20:24.987Z"
+}

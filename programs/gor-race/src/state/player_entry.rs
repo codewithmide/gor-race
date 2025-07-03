@@ -14,6 +14,7 @@ pub struct PlayerEntry {
     pub entry_amount: u64,
     pub claim_status: ClaimStatus,
     pub prize_amount: u64,
+    pub stats_updated: bool,
     pub bump: u8,
 }
 
@@ -25,5 +26,6 @@ impl PlayerEntry {
         8 + // entry_amount
         1 + // claim_status
         8 + // prize_amount
+        1 + // stats_updated
         1; // bump
 }

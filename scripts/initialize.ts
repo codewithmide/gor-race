@@ -16,7 +16,11 @@ async function main() {
   const provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
 
-  const program = anchor.workspace.GorRace as Program<GorRace>;
+  const program = new Program<GorRace>(
+  require("../target/idl/gor_race.json"),
+  new PublicKey("2Xov1MEbY8DdK3MDci83RDJmAK1SHJxg4HtoiCLcBUen"),
+  provider
+) as Program<GorRace>;
   
   console.log("Program ID:", program.programId.toString());
   console.log("Cluster:", provider.connection.rpcEndpoint);

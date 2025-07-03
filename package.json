@@ -8,9 +8,14 @@
     "test": "anchor test",
     "deploy": "anchor deploy --provider.cluster https://rpc.gorbagana.wtf",
     "initialize": "ts-node scripts/initialize.ts",
+    "create-profile": "ts-node scripts/create-profile.ts",
+    "profile": "ts-node scripts/profile.ts",
+    "leaderboard": "ts-node scripts/leaderboard.ts",
+    "update-stats": "ts-node scripts/update-stats.ts",
     "create-race": "ts-node scripts/create-race.ts",
     "join-race": "ts-node scripts/join-race.ts",
     "execute-race": "ts-node scripts/execute-race.ts",
+    "claim-prize": "ts-node scripts/claim-prize.ts",
     "clean": "anchor clean"
   },
   "dependencies": {
