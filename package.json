@@ -1,0 +1,36 @@
+{
+  "name": "gor-race",
+  "version": "0.1.0",
+  "description": "Horse Racing Betting Game on Solana",
+  "scripts": {
+    "lint": "eslint . --ext .ts",
+    "build": "anchor build",
+    "test": "anchor test",
+    "deploy": "anchor deploy --provider.cluster https://rpc.gorbagana.wtf",
+    "initialize": "ts-node scripts/initialize.ts",
+    "create-race": "ts-node scripts/create-race.ts",
+    "join-race": "ts-node scripts/join-race.ts",
+    "execute-race": "ts-node scripts/execute-race.ts",
+    "clean": "anchor clean"
+  },
+  "dependencies": {
+    "@coral-xyz/anchor": "^0.29.0",
+    "@solana/spl-token": "^0.3.9",
+    "@solana/web3.js": "^1.87.6"
+  },
+  "devDependencies": {
+    "@types/bn.js": "^5.1.5",
+    "@types/chai": "^4.3.11",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.19.4",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "chai": "^4.3.10",
+    "eslint": "^8.56.0",
+    "mocha": "^10.2.0",
+    "prettier": "^3.1.1",
+    "ts-mocha": "^10.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}
